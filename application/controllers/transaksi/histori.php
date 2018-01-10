@@ -246,12 +246,20 @@ class Transaksi_Histori_Controller extends Base_Controller {
             // $Data .= "--------------------------\n";
 
             // echo $Data;
-            echo 'print file';
+            echo '+------    PRINTING ON PROGRESS.......   --------+<br/>';
             fwrite($handle, $Data);
             fclose($handle);
-            //copy($file, "//localhost/LX-300");  # Lakukan cetak
-            copy($file, $appset->printeraddr);  # Lakukan cetak
+
+            if (preg_match('/linux/',strtolower(PHP_OS))){
+                echo 'printing on linux';
+            }else{
+                // print on windows
+                //copy($file, "//localhost/LX-300");  # Lakukan cetak
+                copy($file, $appset->printeraddr);  # Lakukan cetak                
+            }
+
             unlink($file);
+            return false;
     }
     
     public function post_cetaknotajzebra(){

@@ -126,13 +126,18 @@
                     // $('body').append(form);
                     // form.submit();
                     
-                    jQuery.post('transaksi/histori/cetaknotadirect', {
-                        trans_id : transaksi_id
-                    }).done(function(data){
-                        alert('Cetak nota sedang di proses');
-                    }).fail(function(data){
-                        // alert('NOTA GAGAL DICETAK');
-                    });
+                    // jQuery.post('transaksi/histori/cetaknotadirect', {
+                    //     trans_id : transaksi_id
+                    // }).done(function(data){
+                    //     alert('Cetak nota sedang di proses');
+                    // }).fail(function(data){
+                    //     // alert('NOTA GAGAL DICETAK');
+                    // });
+
+                    var form = $('<form>').attr('target','_blank').attr('method','post').attr('action','transaksi/histori/cetaknotadirect').append($('<input>').attr('type','hidden').attr('name','trans_id').val(transaksi_id));
+                    $('body').append(form);
+                    form.submit();
+
                     alert('Cetak nota sedang di proses');
 
                     // $.post(loadUrl,{
