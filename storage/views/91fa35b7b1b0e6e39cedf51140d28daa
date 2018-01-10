@@ -1,0 +1,6 @@
+<?php foreach($bulan as $bl): ?>
+<div class="span2" style="margin: 0;">
+    <?php echo \Laravel\Form::checkbox('bulan[]', $bl->id, false); ?> 
+    <?php echo  ucwords($bl->nama)  ; ?>
+</div>
+<?php endforeach; ?>

@@ -1,0 +1,8 @@
+{
+    "name": "Logikamedia/simasad",
+    "description": "Sistem Administrasi Keuangan.",
+    "require": {
+        "dg/mysql-dump": "dev-master",
+        "rah/danpu": "2.*@dev"
+    }
+}
