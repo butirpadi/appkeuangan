@@ -338,6 +338,31 @@ class Transaksi_Histori_Controller extends Base_Controller {
         
         return $res;
     }
+
+    public function get_testcetak(){
+        $tmpdir = sys_get_temp_dir();   # ambil direktori temporary untuk simpan file.
+        $file =  tempnam($tmpdir, 'ctk');  # nama file temporary yang akan dicetak
+        $handle = fopen($file, 'w');
+        fwrite($handle, chr(27).chr(64).'test printing');
+        fclose($handle);
+        $appset = Appsetting::first();
+        // copy($file, $appset->printeraddr); 
+
+        // // exec('lpr -PLX-300 %s' % $file);
+        exec("lpr -P " . $appset->printeraddr . " -r " . $file );
+        // exec('lpr -S ' . $printer->printer_ip . ' -P ' . $printer->printer_name . ' -o -x ' . $file);
+
+        // $command = 'lpr -S 192.168.1.6 -P LX-300+ -o -x /tmp/ctk1uNwkz' ;
+        //     //$command = 'lp -d ' . $printer->printer_name . ' ' . $file;
+        //     if (exec($command)) {
+
+        //         print 'Berhasil';
+        //     } else{
+        //         echo 'Print Gagal';
+        //     }
+
+        return false;
+    }
     
     
 }
