@@ -181,7 +181,7 @@ class Transaksi_Bayariuran_Controller extends Base_Controller {
             $Data .= $this->generate_space(($appset->charcount - strlen('SD Islam Sabilil Huda'))/2,"") . "SD Islam Sabilil Huda\n";
             $Data .= $this->generate_space(($appset->charcount - strlen('Jl. Singokarso 54 Sumorame, Candi, Sidoarjo'))/2,"") . "Jl. Singokarso 54 Sumorame, Candi, Sidoarjo\n";
             $Data .= $this->generate_space(($appset->charcount - strlen($tahunajaran->nama))/2,"") . $tahunajaran->nama . "\n\n";
-            $Data .= "Siswa : " . $trans->siswa->nama . $this->generate_space($appset->charcount - strlen("NIS   : " . $trans->siswa->nisn), "Tanggal:" . $tanggaltrans) . "Tanggal:" . $tanggaltrans . "\n";
+            $Data .= "Siswa : " . $trans->siswa->nama . $this->generate_space($appset->charcount - strlen("Siswa : " . $trans->siswa->nama), "Tanggal:" . $tanggaltrans) . "Tanggal:" . $tanggaltrans . "\n";
             $Data .= "NIS   : " . $trans->siswa->nisn  . "\n";
             $rombel = \DB::table('rombelsiswa')
                         ->where('tahunajaran_id','=',$vtrans->tahunajaran_id)
@@ -282,7 +282,7 @@ class Transaksi_Bayariuran_Controller extends Base_Controller {
             $Data .= $this->generate_space(($appset->charcount - strlen('SD Islam Sabilil Huda'))/2,"") . "SD Islam Sabilil Huda\n";
             $Data .= $this->generate_space(($appset->charcount - strlen('Jl. Singokarso 54 Sumorame, Candi, Sidoarjo'))/2,"") . "Jl. Singokarso 54 Sumorame, Candi, Sidoarjo\n";
             $Data .= $this->generate_space(($appset->charcount - strlen($tahunajaran->nama))/2,"") . $tahunajaran->nama . "\n\n";
-            $Data .= "Siswa : " . $trans->siswa->nama . $this->generate_space($appset->charcount - strlen("NIS   : " . $trans->siswa->nisn), "Tanggal:" . $tanggaltrans) . "Tanggal:" . $tanggaltrans . "\n";
+            $Data .= "Siswa : " . $trans->siswa->nama . $this->generate_space($appset->charcount - strlen("Siswa : " . $trans->siswa->nama), "Tanggal:" . $tanggaltrans) . "Tanggal:" . $tanggaltrans . "\n";
             $Data .= "NIS   : " . $trans->siswa->nisn  . "\n";
             $rombel = \DB::table('rombelsiswa')
                         ->where('tahunajaran_id','=',$vtrans->tahunajaran_id)
