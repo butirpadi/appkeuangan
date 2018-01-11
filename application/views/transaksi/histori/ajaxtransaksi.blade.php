@@ -105,6 +105,7 @@
              */
             jQuery('.buttonPrint').click(function(){
                 var transaksi_id = jQuery(this).attr('idtrans');
+
                 
                 if (confirm('Anda akan mencetak nota untuk transaksi ini?')){
                     // var loadUrl = "{{ URL::to('transaksi/histori/cetaknotajzebra') }}";
@@ -126,19 +127,17 @@
                     // $('body').append(form);
                     // form.submit();
                     
-                    // jQuery.post('transaksi/histori/cetaknotadirect', {
-                    //     trans_id : transaksi_id
-                    // }).done(function(data){
-                    //     alert('Cetak nota sedang di proses');
-                    // }).fail(function(data){
-                    //     // alert('NOTA GAGAL DICETAK');
-                    // });
+                    jQuery.post('transaksi/histori/cetaknotadirect', {
+                        trans_id : transaksi_id
+                    }).done(function(data){
+                        alert('Cetak nota sedang di proses');
+                    }).fail(function(data){
+                        alert('NOTA GAGAL DICETAK, PLEASE CONTACT DEVELOPER!!');
+                    });
 
-                    var form = $('<form>').attr('target','_blank').attr('method','post').attr('action','transaksi/histori/cetaknotadirect').append($('<input>').attr('type','hidden').attr('name','trans_id').val(transaksi_id));
-                    $('body').append(form);
-                    form.submit();
-
-                    alert('Cetak nota sedang di proses');
+                    // var form = $('<form>').attr('target','_blank').attr('method','post').attr('action','transaksi/histori/cetaknotadirect').append($('<input>').attr('type','hidden').attr('name','trans_id').val(transaksi_id));
+                    // $('body').append(form);
+                    // form.submit();
 
                     // $.post(loadUrl,{
                     //   trans_id : transaksi_id

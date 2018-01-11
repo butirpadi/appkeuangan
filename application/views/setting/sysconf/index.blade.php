@@ -94,6 +94,7 @@
                         <li class="active"><a href="#global">Global Setting</a></li>
                         <li><a href="#backup">Data Backup</a></li>
                         <li><a href="#qrun">Query Runner</a></li>
+                        <li><a style="color:red;" href="#updater">!!! Updater Tools</a></li>
                         <!--<li><a href="#iuran">Target Pencapaian Iuran Bulanan</a></li>-->
                         <!--<li><a href="#target">Target Pencapaian</a></li>-->
                 </ul>
@@ -117,6 +118,24 @@
                                         <td><i>alamat printer yang di share</i></td>
                                         {{ \Laravel\Form::close() }}
                                     </tr>
+                                    @if($appset->using_winrawprint)
+                                    <tr>
+                                        {{ \Laravel\Form::open(URL::to('setting/sysconf/setUseWinPrint'), 'POST') }}
+                                        <td>Using Win Raw Printing</td>
+                                        <td>{{ \Laravel\Form::select('usingwinrawprint', ['Y'=>'Yes','N'=>'No'],$appset->using_winrawprint,[]) }}</td>
+                                        <td>{{ \Laravel\Form::submit('Update', array('class'=>'btn btn-primary')) }}</td>
+                                        <td><i>Using Win Raw Print Application or no</i></td>
+                                        {{ \Laravel\Form::close() }}
+                                    </tr>
+                                    <tr>
+                                        {{ \Laravel\Form::open(URL::to('setting/sysconf/setWinPrintLoc'), 'POST') }}
+                                        <td>Win Raw Print Location</td>
+                                        <td>{{ \Laravel\Form::text('winrawprintloc', $appset->winrawprint_loc) }}</td>
+                                        <td>{{ \Laravel\Form::submit('Update', array('class'=>'btn btn-primary')) }}</td>
+                                        <td><i>Win Raw Print Application Location</i></td>
+                                        {{ \Laravel\Form::close() }}
+                                    </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -154,6 +173,11 @@
                                 {{ \Laravel\Form::button('Run', array('class'=>'btn btn-primary')) }}
                                 {{ \Laravel\Form::close() }}
                             </fieldset>
+                        </div>
+                        <div class="tab-pane" id="updater">
+                            <div class="col-xs-2" >
+                                <a class="btn btn-primary" id="btn-updater-1"  href="setting/sysconf/updatedirectprint" target="_blank" >Update <br/>Win Raw Printing</a>
+                            </div>
                         </div>
 <!--                        <div class="tab-pane" id="iuran">
                             <fieldset>

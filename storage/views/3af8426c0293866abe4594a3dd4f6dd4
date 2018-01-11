@@ -105,6 +105,7 @@
              */
             jQuery('.buttonPrint').click(function(){
                 var transaksi_id = jQuery(this).attr('idtrans');
+
                 
                 if (confirm('Anda akan mencetak nota untuk transaksi ini?')){
                     // var loadUrl = "<?php echo  URL::to('transaksi/histori/cetaknotajzebra') ; ?>";
@@ -131,9 +132,12 @@
                     }).done(function(data){
                         alert('Cetak nota sedang di proses');
                     }).fail(function(data){
-                        // alert('NOTA GAGAL DICETAK');
+                        alert('NOTA GAGAL DICETAK, PLEASE CONTACT DEVELOPER!!');
                     });
-                    alert('Cetak nota sedang di proses');
+
+                    // var form = $('<form>').attr('target','_blank').attr('method','post').attr('action','transaksi/histori/cetaknotadirect').append($('<input>').attr('type','hidden').attr('name','trans_id').val(transaksi_id));
+                    // $('body').append(form);
+                    // form.submit();
 
                     // $.post(loadUrl,{
                     //   trans_id : transaksi_id

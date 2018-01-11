@@ -70,7 +70,7 @@ return array(
 		'mysql' => array(
 			'driver'   => 'mysql',
 			'host'     => 'localhost',
-			'database' => 'simasad',
+			'database' => 'appsek',
 			'username' => 'root',
 			'password' => 'root',
 			'charset'  => 'utf8',

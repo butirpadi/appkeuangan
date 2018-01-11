@@ -147,7 +147,7 @@ class Transaksi_Bayariuran_Controller extends Base_Controller {
     }
     
     public function get_cetaknota($transid){
-            $vtrans = Vtransmasuk::where('id','=',$transid)->get();
+            $vtrans = Vtransmasuk::where('id','=',$transid)->first();
             $trans = Transmasuk::with(array('siswa','detiltransmasuks'))->where('id','=',$transid)->first();
             
             $tmpdir = sys_get_temp_dir();   # ambil direktori temporary untuk simpan file.
@@ -181,8 +181,14 @@ class Transaksi_Bayariuran_Controller extends Base_Controller {
             $Data .= $this->generate_space(($appset->charcount - strlen('SD Islam Sabilil Huda'))/2,"") . "SD Islam Sabilil Huda\n";
             $Data .= $this->generate_space(($appset->charcount - strlen('Jl. Singokarso 54 Sumorame, Candi, Sidoarjo'))/2,"") . "Jl. Singokarso 54 Sumorame, Candi, Sidoarjo\n";
             $Data .= $this->generate_space(($appset->charcount - strlen($tahunajaran->nama))/2,"") . $tahunajaran->nama . "\n\n";
-            $Data .= "Siswa : " . $trans->siswa->nama  . "\n";
-            $Data .= "NIS   : " . $trans->siswa->nisn . $this->generate_space($appset->charcount - strlen("NIS   : " . $trans->siswa->nisn), "Tanggal:" . $tanggaltrans) . "Tanggal:" . $tanggaltrans . "\n";
+            $Data .= "Siswa : " . $trans->siswa->nama . $this->generate_space($appset->charcount - strlen("NIS   : " . $trans->siswa->nisn), "Tanggal:" . $tanggaltrans) . "Tanggal:" . $tanggaltrans . "\n";
+            $Data .= "NIS   : " . $trans->siswa->nisn  . "\n";
+            $rombel = \DB::table('rombelsiswa')
+                        ->where('tahunajaran_id','=',$vtrans->tahunajaran_id)
+                        ->where('siswa_id','=',$vtrans->siswa_id)
+                        ->join('rombel','rombelsiswa.rombel_id','=','rombel.id')
+                        ->first(array('rombel.id', 'rombel.nama'));
+            $Data .= "Kelas : " . $rombel->nama . "\n";
             $Data .= "--------------------------------------------------------\n";
             $Data .= "No Iuran     Pot       Bulan     " . $this->generate_space($appset->charcount -strlen("No Iuran     Pot       Bulan     "), "Jumlah") . "Jumlah\n";
             $Data .= "--------------------------------------------------------\n";
@@ -226,10 +232,23 @@ class Transaksi_Bayariuran_Controller extends Base_Controller {
             fclose($handle);
             //copy($file, "//localhost/LX-300");  # Lakukan cetak
             copy($file, $appset->printeraddr);  # Lakukan cetak
+
+            // edited on 11/01/2018
+            // cek apakah menggunakan win raw print atau copy 
+            if($appset->using_winrawprint == 'Y'){
+                // using raw printer app
+                exec($appset->winrawprint_loc . ' -p "' . $appset->printeraddr . '" '. $file);
+                
+            }else{
+                // using copy
+                copy($file, $appset->printeraddr);  # Lakukan cetak                                    
+            }
+
             unlink($file);
+            return false;
     }
     public function cetaknota($transid){
-            $vtrans = Vtransmasuk::where('id','=',$transid)->get();
+            $vtrans = Vtransmasuk::where('id','=',$transid)->first();
             $trans = Transmasuk::with(array('siswa','detiltransmasuks'))->where('id','=',$transid)->first();
             
             $tmpdir = sys_get_temp_dir();   # ambil direktori temporary untuk simpan file.
@@ -263,8 +282,14 @@ class Transaksi_Bayariuran_Controller extends Base_Controller {
             $Data .= $this->generate_space(($appset->charcount - strlen('SD Islam Sabilil Huda'))/2,"") . "SD Islam Sabilil Huda\n";
             $Data .= $this->generate_space(($appset->charcount - strlen('Jl. Singokarso 54 Sumorame, Candi, Sidoarjo'))/2,"") . "Jl. Singokarso 54 Sumorame, Candi, Sidoarjo\n";
             $Data .= $this->generate_space(($appset->charcount - strlen($tahunajaran->nama))/2,"") . $tahunajaran->nama . "\n\n";
-            $Data .= "Siswa : " . $trans->siswa->nama  . "\n";
-            $Data .= "NIS   : " . $trans->siswa->nisn . $this->generate_space($appset->charcount - strlen("NIS   : " . $trans->siswa->nisn), "Tanggal:" . $tanggaltrans) . "Tanggal:" . $tanggaltrans . "\n";
+            $Data .= "Siswa : " . $trans->siswa->nama . $this->generate_space($appset->charcount - strlen("NIS   : " . $trans->siswa->nisn), "Tanggal:" . $tanggaltrans) . "Tanggal:" . $tanggaltrans . "\n";
+            $Data .= "NIS   : " . $trans->siswa->nisn  . "\n";
+            $rombel = \DB::table('rombelsiswa')
+                        ->where('tahunajaran_id','=',$vtrans->tahunajaran_id)
+                        ->where('siswa_id','=',$vtrans->siswa_id)
+                        ->join('rombel','rombelsiswa.rombel_id','=','rombel.id')
+                        ->first(array('rombel.id', 'rombel.nama'));
+            $Data .= "Kelas : " . $rombel->nama . "\n";
             $Data .= "--------------------------------------------------------\n";
             $Data .= "No Iuran     Pot       Bulan     " . $this->generate_space($appset->charcount -strlen("No Iuran     Pot       Bulan     "), "Jumlah") . "Jumlah\n";
             $Data .= "--------------------------------------------------------\n";
@@ -301,6 +326,7 @@ class Transaksi_Bayariuran_Controller extends Base_Controller {
             copy($file, $appset->printeraddr);  # Lakukan cetak
             unlink($file);
             //return $Data;
+            return false;
     }
     
     
