@@ -234,6 +234,12 @@
                         biaya = null;
                     }
                 });
+
+                // hide select ganti dengan text
+                var jenis_biaya_text = $(this).find('option:selected').text();
+                $(this).after($('<input>').attr('type','text').attr('readonly','readonly').val(jenis_biaya_text));
+                $(this).addClass('hide');
+
              });
             /**
              * Tampilkan ketentuan Biaya
@@ -267,6 +273,10 @@
                                     alert('.:: PERINGATAN ::. Nilai Biaya belum ditetapkan/ditentukan.');
                                 }
                             });
+                            // get sisa pembayaran
+                            if(biaya.tipe == 'ITC'){
+
+                            }
                     }else if(biaya.tipe == 'IB'){
                             //tampilkan input IB
                             showInputIB();
@@ -316,27 +326,36 @@
                     //get data sudah dibayar
                     var getSudahBayarUrl = "{{ URL::to('transaksi/bayariuran/sudahbayar') }}" + "/" + tahunajaran.id + "/" + biaya.id + "/" + siswa.id;
                     jQuery.get(getSudahBayarUrl).done(function(data){
-                       sudahdibayar = data;
+                      sudahdibayar = data;
+
+                      //tampilkan sudah dibayar                    
+                      if(sudahdibayar > 0){
+                          jQuery('.input-sudah-bayar').show();
+                          jQuery('input[name=sudahbayar]').attr('value',formatRupiahVal(sudahdibayar));
+                          jQuery('.input-harus-bayar').show();
+                          jQuery('input[name=harus]').attr('value',formatRupiahVal(ketbiaya.jumlah - sudahdibayar));
+                      }else{
+                          jQuery('.input-sudah-bayar').hide();
+                          jQuery('input[name=sudahbayar]').removeAttr('value');
+                          jQuery('.input-harus-bayar').hide();
+                          jQuery('input[name=harus]').removeAttr('value');
+                      }
+                      //show potongan kalau ada
+                      showPotongan();
+                      //tampilkan bayar
+                      showBayar();
+                      // TAMPILKAN HARUS BAYAR
+                      var  harusbayar = (ketbiaya.jumlah - potongan.nilai -  sudahdibayar);
+                      $('input[name=harusbayar]').val(formatRupiahVal(harusbayar));
+                      if(Number(harusbayar) < 0){
+                        $('input[name=harusbayar]').css('background-color','red');
+                        $('#form-input-pembayaran').find('table').after('<i style="color:red;" ># Jika Kolom <strong>{Harus Dibayar}</strong> berwarna merah, artinya adalah kelebihan pembayaran</i>')
+                      }else{
+                        $('input[name=harusbayar]').css('background-color','white');
+                      }
+                      //focus ke text baya
+                      jQuery('input[name=bayar]').focus();
                     });
-                    //tampilkan sudah dibayar
-                    if(sudahdibayar > 0){
-                        jQuery('.input-sudah-bayar').show();
-                        jQuery('input[name=sudahbayar]').attr('value',formatRupiahVal(sudahdibayar));
-                        jQuery('.input-harus-bayar').show();
-                        jQuery('input[name=harus]').attr('value',formatRupiahVal(ketbiaya.jumlah - sudahdibayar));
-                    }else{
-                        jQuery('.input-sudah-bayar').hide();
-                        jQuery('input[name=sudahbayar]').removeAttr('value');
-                        jQuery('.input-harus-bayar').hide();
-                        jQuery('input[name=harus]').removeAttr('value');
-                    }
-                    //tampilkan bayar
-                    showBayar();
-                    //show potongan kalau ada
-                    showPotongan();
-                    //focus ke text baya
-                    jQuery('input[name=bayar]').focus();
-                    
                }
                /**
                 * Tampilkan input IB
@@ -393,8 +412,8 @@
              function showBayar(){
                 if(potongan != null){
                     //tampilkan input bayar
-                    jQuery('input[name=bayar]').attr('value',formatRupiahVal((ketbiaya.jumlah - potongan.nilai)));
-                    jQuery('input[name=bayar]').attr('readonly','readonly');
+                    // jQuery('input[name=bayar]').attr('value',formatRupiahVal((ketbiaya.jumlah - potongan.nilai)));
+                    // jQuery('input[name=bayar]').attr('readonly','readonly');
                 }else{
                     //reset dan sembunyikan
                     jQuery('input[name=potongan]').removeAttr('value');
