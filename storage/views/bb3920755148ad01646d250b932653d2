@@ -317,25 +317,30 @@
                     var getSudahBayarUrl = "<?php echo  URL::to('transaksi/bayariuran/sudahbayar') ; ?>" + "/" + tahunajaran.id + "/" + biaya.id + "/" + siswa.id;
                     jQuery.get(getSudahBayarUrl).done(function(data){
                        sudahdibayar = data;
+
+                       //tampilkan sudah dibayar
+                      if(sudahdibayar > 0){
+                          jQuery('.input-sudah-bayar').show();
+                          jQuery('input[name=sudahbayar]').attr('value',formatRupiahVal(sudahdibayar));
+                          jQuery('.input-harus-bayar').show();
+                          jQuery('input[name=harus]').attr('value',formatRupiahVal(ketbiaya.jumlah - sudahdibayar));
+                      }else{
+                          jQuery('.input-sudah-bayar').hide();
+                          jQuery('input[name=sudahbayar]').removeAttr('value');
+                          jQuery('.input-harus-bayar').hide();
+                          jQuery('input[name=harus]').removeAttr('value');
+                      }
+                      //show potongan kalau ada
+                      showPotongan();
+                      
+                      //tampilkan bayar
+                      showBayar();
+                      
+                      //focus ke text baya
+                      jQuery('input[name=bayar]').focus();
+
                     });
-                    //tampilkan sudah dibayar
-                    if(sudahdibayar > 0){
-                        jQuery('.input-sudah-bayar').show();
-                        jQuery('input[name=sudahbayar]').attr('value',formatRupiahVal(sudahdibayar));
-                        jQuery('.input-harus-bayar').show();
-                        jQuery('input[name=harus]').attr('value',formatRupiahVal(ketbiaya.jumlah - sudahdibayar));
-                    }else{
-                        jQuery('.input-sudah-bayar').hide();
-                        jQuery('input[name=sudahbayar]').removeAttr('value');
-                        jQuery('.input-harus-bayar').hide();
-                        jQuery('input[name=harus]').removeAttr('value');
-                    }
-                    //tampilkan bayar
-                    showBayar();
-                    //show potongan kalau ada
-                    showPotongan();
-                    //focus ke text baya
-                    jQuery('input[name=bayar]').focus();
+
                     
                }
                /**
@@ -509,6 +514,10 @@
                         rownum++;
                         
                  }
+
+                 resetInputITC();
+                 resetInputITB();
+                 resetInputIB();
              });
              /**
               * Hapus data detil transaksi
