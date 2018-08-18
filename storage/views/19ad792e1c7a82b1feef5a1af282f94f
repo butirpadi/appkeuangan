@@ -1,0 +1,188 @@
+<?php $rownum = 1;?>
+<?php $grandtotal = 0;?>
+<?php $total_bayar = 0;?>
+<?php $total_kewajiban = 0;?>
+<?php $total_potongan = 0;?>
+<?php $total_sisa = 0;?>
+<table class="table table-bordered" >
+    <thead>
+            <tr>
+                <th rowspan="2" style="vertical-align: middle; text-align: center;" >NO</th>
+                <th rowspan="2" style="vertical-align: middle;text-align: center;" >NISN</th>
+                <th rowspan="2" style="vertical-align: middle;text-align: center;" >NAMA SISWA</th>
+                <?php if(!$rombel): ?>
+                <th rowspan="2" style="vertical-align: middle;text-align: center;" >ROMBEL</th>
+                <?php endif; ?>
+                <th colspan="12" style="vertical-align: middle;text-align: center;" >BULAN</th>
+                <th rowspan="2" style="vertical-align: middle;text-align: center;" >BAYAR</th>
+                <th rowspan="2" style="vertical-align: middle;text-align: center;" >KEWAJIBAN</th>
+                <th rowspan="2" style="vertical-align: middle;text-align: center;" >POTONGAN</th>
+                <th rowspan="2" style="vertical-align: middle;text-align: center;" >KEKURANGAN</th>
+            </tr>
+            <tr>
+                <th style="vertical-align: middle;text-align: center;text-transform: capitalize;"><?php echo  substr($bulans[0]->nama,0,3) ; ?></th>
+                <th style="vertical-align: middle;text-align: center;text-transform: capitalize;"><?php echo  substr($bulans[1]->nama,0,3) ; ?></th>
+                <th style="vertical-align: middle;text-align: center;text-transform: capitalize;"><?php echo  substr($bulans[2]->nama,0,3) ; ?></th>
+                <th style="vertical-align: middle;text-align: center;text-transform: capitalize;"><?php echo  substr($bulans[3]->nama,0,3) ; ?></th>
+                <th style="vertical-align: middle;text-align: center;text-transform: capitalize;"><?php echo  substr($bulans[4]->nama,0,3) ; ?></th>
+                <th style="vertical-align: middle;text-align: center;text-transform: capitalize;"><?php echo  substr($bulans[5]->nama,0,3) ; ?></th>
+                <th style="vertical-align: middle;text-align: center;text-transform: capitalize;"><?php echo  substr($bulans[6]->nama,0,3) ; ?></th>
+                <th style="vertical-align: middle;text-align: center;text-transform: capitalize;"><?php echo  substr($bulans[7]->nama,0,3) ; ?></th>
+                <th style="vertical-align: middle;text-align: center;text-transform: capitalize;"><?php echo  substr($bulans[8]->nama,0,3) ; ?></th>
+                <th style="vertical-align: middle;text-align: center;text-transform: capitalize;"><?php echo  substr($bulans[9]->nama,0,3) ; ?></th>
+                <th style="vertical-align: middle;text-align: center;text-transform: capitalize;"><?php echo  substr($bulans[10]->nama,0,3) ; ?></th>
+                <th style="vertical-align: middle;text-align: center;text-transform: capitalize;"><?php echo  substr($bulans[11]->nama,0,3) ; ?></th>
+            </tr>
+    </thead>   
+
+    <tbody>
+        <?php foreach($data as $rek): ?>
+            <tr>
+                <td class="nomer"><?php echo  $rownum++ ; ?></td>
+                <td><?php echo  $rek->nisn ; ?></td>
+                <td><?php echo  $rek->siswa ; ?></td>
+                <?php if(!$rombel): ?>
+                <td><?php echo  $rek->rombel ; ?></td>
+                <?php endif; ?>
+                <td class="uang">
+                    <?php if($rek->juli): ?>
+                        <?php echo number_format($rek->juli, 0, ',', '.'); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->agustus): ?>
+                        <?php echo number_format($rek->agustus, 0, ',', '.'); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->september): ?>
+                        <?php echo number_format($rek->september, 0, ',', '.'); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->oktober): ?>
+                        <?php echo number_format($rek->oktober, 0, ',', '.'); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->november): ?>
+                        <?php echo number_format($rek->november, 0, ',', '.'); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->desember): ?>
+                        <?php echo number_format($rek->desember, 0, ',', '.'); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->januari): ?>
+                        <?php echo number_format($rek->januari, 0, ',', '.'); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->februari): ?>
+                        <?php echo number_format($rek->februari, 0, ',', '.'); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->maret): ?>
+                        <?php echo number_format($rek->maret, 0, ',', '.'); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->april): ?>
+                        <?php echo number_format($rek->april, 0, ',', '.'); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->mei): ?>
+                        <?php echo number_format($rek->mei, 0, ',', '.'); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->juni): ?>
+                        <?php echo number_format($rek->juni, 0, ',', '.'); ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->total_bayar): ?>
+                        <?php echo number_format($rek->total_bayar, 0, ',', '.'); ?>
+                        <?php $grandtotal += $rek->total_bayar; ?>
+                        <?php $total_bayar += $rek->total_bayar; ?>
+                    <?php else: ?>
+                        0
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->harus_bayar): ?>
+                        <?php echo number_format($rek->harus_bayar, 0, ',', '.'); ?>
+                        <?php $total_kewajiban += $rek->harus_bayar; ?>
+                    <?php else: ?>
+                        0
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->potongan): ?>
+                        <?php echo number_format($rek->potongan, 0, ',', '.'); ?>
+                        <?php $total_potongan += $rek->potongan; ?>
+                    <?php else: ?>
+                        0
+                    <?php endif; ?>
+                </td>
+                <td class="uang">
+                    <?php if($rek->amount_due): ?>
+                        <?php echo number_format($rek->amount_due, 0, ',', '.'); ?>
+                        <?php $total_sisa += $rek->amount_due; ?>
+                    <?php else: ?>
+                        0
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        <tr style="font-weight: bolder;">
+            <?php if(!$rombel): ?>
+                <td colspan="16" style="text-align: center;">GRAND TOTAL</td>
+            <?php else: ?>
+                <td colspan="15" style="text-align: center;">GRAND TOTAL</td>
+            <?php endif; ?>
+            <td class="uang"><?php echo number_format($total_bayar, 0, ',', '.'); ?></td>
+            <td class="uang"><?php echo number_format($total_kewajiban, 0, ',', '.'); ?></td>
+            <td class="uang"><?php echo number_format($total_potongan, 0, ',', '.'); ?></td>
+            <td class="uang"><?php echo number_format($total_sisa, 0, ',', '.'); ?></td>
+
+            <!-- <td colspan="3" class="uang"><?php echo number_format($grandtotal, 0, ',', '.'); ?></td> -->
+        </tr>
+            
+    </tbody>
+</table>
+
+<style type="text/css">
+    .uang,.nomer{
+        text-align: right!important;
+    }
+</style>
+    

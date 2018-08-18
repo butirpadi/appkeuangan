@@ -72,6 +72,7 @@ Route::controller(array(
     'rekap/rekapsiswa',
     'datarekap/rekapharian',
     'datarekap/rekapbulanan',
+    'rekap/iuranpertapel',
 ));
 
 

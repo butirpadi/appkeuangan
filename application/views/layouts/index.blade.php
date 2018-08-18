@@ -177,6 +177,7 @@
                             @if($user->can('manage_rekapitulasi_tahunan'))
                                 <li><a data-value="classic" href="{{ URL::to('rekap/tahunan') }}"><i class="icon-th"></i> Rekapitulasi Keuangan Tahunan</a></li>
                             @endif
+                                <li><a data-value="classic" href="{{ URL::to('rekap/iuranpertapel') }}"><i class="icon-th"></i> Rekapitulasi Iuran Per Tahun Ajaran</a></li>
                         </ul>
                 </div>
                 <div class="btn-group pull-left ">

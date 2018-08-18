@@ -1,4 +1,4 @@
-@section('custom_script')
+<?php \Laravel\Section::start('custom_script'); ?>
     <script type="text/javascript">
         jQuery(document).ready(function(){   
             /**
@@ -28,7 +28,7 @@
 //               var jumlah = jQuery('input[name='+target_id+']').attr('value');
 //               var unformat_jumlah = unformatRupiahVal(jumlah);
 //               //update target with jquery post
-//               jQuery.post("{{ URL::to('setting/sysconf/targetpencapaian') }}", {
+//               jQuery.post("<?php echo  URL::to('setting/sysconf/targetpencapaian') ; ?>", {
 //                    tahun_id: tahun_id,
 //                    jumlah: unformat_jumlah
 //                }).fail(function(data){
@@ -44,7 +44,7 @@
 //             jQuery('.buttonSet').click(function(){
 //                //tampilkan data pencapaian
 //                var tahunajaran_id = jQuery('select[name=targetjenisbiaya]').attr('value');
-//                var loadUrl = "{{ URL::to('setting/sysconf/ajaxtargetbulanan') }}" + "/" + tahunajaran_id;
+//                var loadUrl = "<?php echo  URL::to('setting/sysconf/ajaxtargetbulanan') ; ?>" + "/" + tahunajaran_id;
 //                jQuery('#formTargetBulanan').load(loadUrl,function(){
 //                    formatRupiahOnLoad();
 //                });
@@ -68,12 +68,12 @@
              });
         });
     </script>
-@endsection
+<?php \Laravel\Section::stop(); ?>
 
 <!--<div>
         <ul class="breadcrumb">
                 <li>
-                        <a href="{{ URL::to('home') }}">Home</a> <span class="divider">/</span>
+                        <a href="<?php echo  URL::to('home') ; ?>">Home</a> <span class="divider">/</span>
                 </li>
                 <li>
                         <a href="#">System Setting</a>
@@ -103,39 +103,39 @@
                             <table class="table-striped">
                                 <tbody>
                                     <tr>
-                                        {{ \Laravel\Form::open(URL::to('setting/sysconf/cetaknota'), 'POST') }}
+                                        <?php echo  \Laravel\Form::open(URL::to('setting/sysconf/cetaknota'), 'POST') ; ?>
                                         <td>Cetak Nota Otomatis</td>
-                                        <td>{{ \Laravel\Form::select('cetaknota', array('Y'=>'YA','N'=>'TIDAK'),$appset->cetaknota) }}</td>
-                                        <td>{{ \Laravel\Form::submit('Update', array('class'=>'btn btn-primary')) }}</td>
+                                        <td><?php echo  \Laravel\Form::select('cetaknota', array('Y'=>'YA','N'=>'TIDAK'),$appset->cetaknota) ; ?></td>
+                                        <td><?php echo  \Laravel\Form::submit('Update', array('class'=>'btn btn-primary')) ; ?></td>
                                         <td><i>jika dipilih, secara otomatis sistem akan mencetak nota setiap transaksi iuran yang dilakukan</i></td>
-                                        {{ \Laravel\Form::close() }}
+                                        <?php echo  \Laravel\Form::close() ; ?>
                                     </tr>
                                     <tr>
-                                        {{ \Laravel\Form::open(URL::to('setting/sysconf/printeraddr'), 'POST') }}
+                                        <?php echo  \Laravel\Form::open(URL::to('setting/sysconf/printeraddr'), 'POST') ; ?>
                                         <td>Shared Printer Address</td>
-                                        <td>{{ \Laravel\Form::text('printeraddr', $appset->printeraddr) }}</td>
-                                        <td>{{ \Laravel\Form::submit('Update', array('class'=>'btn btn-primary')) }}</td>
+                                        <td><?php echo  \Laravel\Form::text('printeraddr', $appset->printeraddr) ; ?></td>
+                                        <td><?php echo  \Laravel\Form::submit('Update', array('class'=>'btn btn-primary')) ; ?></td>
                                         <td><i>alamat printer yang di share</i></td>
-                                        {{ \Laravel\Form::close() }}
+                                        <?php echo  \Laravel\Form::close() ; ?>
                                     </tr>
-                                    @if($appset->using_winrawprint)
+                                    <?php if($appset->using_winrawprint): ?>
                                     <tr>
-                                        {{ \Laravel\Form::open(URL::to('setting/sysconf/setUseWinPrint'), 'POST') }}
+                                        <?php echo  \Laravel\Form::open(URL::to('setting/sysconf/setUseWinPrint'), 'POST') ; ?>
                                         <td>Using Win Raw Printing</td>
-                                        <td>{{ \Laravel\Form::select('usingwinrawprint', ['Y'=>'Yes','N'=>'No'],$appset->using_winrawprint,[]) }}</td>
-                                        <td>{{ \Laravel\Form::submit('Update', array('class'=>'btn btn-primary')) }}</td>
+                                        <td><?php echo  \Laravel\Form::select('usingwinrawprint', ['Y'=>'Yes','N'=>'No'],$appset->using_winrawprint,[]) ; ?></td>
+                                        <td><?php echo  \Laravel\Form::submit('Update', array('class'=>'btn btn-primary')) ; ?></td>
                                         <td><i>Using Win Raw Print Application or no</i></td>
-                                        {{ \Laravel\Form::close() }}
+                                        <?php echo  \Laravel\Form::close() ; ?>
                                     </tr>
                                     <tr>
-                                        {{ \Laravel\Form::open(URL::to('setting/sysconf/setWinPrintLoc'), 'POST') }}
+                                        <?php echo  \Laravel\Form::open(URL::to('setting/sysconf/setWinPrintLoc'), 'POST') ; ?>
                                         <td>Win Raw Print Location</td>
-                                        <td>{{ \Laravel\Form::text('winrawprintloc', $appset->winrawprint_loc) }}</td>
-                                        <td>{{ \Laravel\Form::submit('Update', array('class'=>'btn btn-primary')) }}</td>
+                                        <td><?php echo  \Laravel\Form::text('winrawprintloc', $appset->winrawprint_loc) ; ?></td>
+                                        <td><?php echo  \Laravel\Form::submit('Update', array('class'=>'btn btn-primary')) ; ?></td>
                                         <td><i>Win Raw Print Application Location</i></td>
-                                        {{ \Laravel\Form::close() }}
+                                        <?php echo  \Laravel\Form::close() ; ?>
                                     </tr>
-                                    @endif
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
@@ -146,16 +146,16 @@
                                         <h4 class="alert-heading">PENTING!</h4>
                                         Lakukan backup data sesering mungkin, untuk menjaga keamanan data anda.
                                 </div>
-                                <a href="{{ URL::to('setting/sysconf/backupme') }}" class="btn btn-primary" >Klik untuk backup database</a>
+                                <a href="<?php echo  URL::to('setting/sysconf/backupme') ; ?>" class="btn btn-primary" >Klik untuk backup database</a>
                             </fieldset>
                             <br/>
                             <fieldset>
-                                {{ \Laravel\Form::open_for_files(URL::to('setting/sysconf/restore'), 'POST') }}
+                                <?php echo  \Laravel\Form::open_for_files(URL::to('setting/sysconf/restore'), 'POST') ; ?>
                                 <legend>Data Restore</legend>
                                 Open file backup
                                 <input class="input-file" name="fileupload" type="file">
-                                {{ \Laravel\Form::button('Restore Database', array('class'=>'btn btn-primary btn-restore')) }}
-                                {{ \Laravel\Form::close() }}
+                                <?php echo  \Laravel\Form::button('Restore Database', array('class'=>'btn btn-primary btn-restore')) ; ?>
+                                <?php echo  \Laravel\Form::close() ; ?>
                             </fieldset>
                         </div>
                         <div class="tab-pane" id="qrun">
@@ -167,11 +167,11 @@
                             </fieldset>
                             <br/>
                             <fieldset>
-                                {{ \Laravel\Form::open(URL::to('setting/sysconf/queryrunner'), 'POST') }}
+                                <?php echo  \Laravel\Form::open(URL::to('setting/sysconf/queryrunner'), 'POST') ; ?>
                                 <?php echo \Laravel\Form::textarea('query',null,array('required','class'=>'span12')); ?>
                                 <br/>
-                                {{ \Laravel\Form::button('Run', array('class'=>'btn btn-primary')) }}
-                                {{ \Laravel\Form::close() }}
+                                <?php echo  \Laravel\Form::button('Run', array('class'=>'btn btn-primary')) ; ?>
+                                <?php echo  \Laravel\Form::close() ; ?>
                             </fieldset>
                         </div>
                         <div class="tab-pane" id="updater">

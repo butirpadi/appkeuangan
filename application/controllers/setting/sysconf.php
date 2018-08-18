@@ -203,6 +203,57 @@ class Setting_Sysconf_Controller extends Base_Controller{
         
         $dump->write();
     }
+
+
+    public function get_updatedirectprint(){
+        // cek apakah sudah ada data direct ptint
+        // echo 'inside update direct print <br/>';
+        $appset = Appsetting::first();
+        // if($appset->created_at){
+        //     echo 'tertsedia';
+
+        // }else{
+        //     echo 'tidak tersedia';
+        // }
+
+        try {
+            \DB::table('appsetting')
+            ->update([
+                'using_winrawprint' => 'N'
+            ]);   
+
+        } catch (Exception $e) {
+            // alter table create column using_winrarprint\
+            $pdo = DB::connection('mysql')->pdo;
+            $stmt = $pdo->prepare("ALTER TABLE appsetting ADD COLUMN using_winrawprint char(1) NULL DEFAULT 'Y' AFTER sn_key, ADD COLUMN winrawprint_loc varchar(250) NULL DEFAULT 'Y' AFTER using_winrawprint");
+            $stmt->execute();
+        }
+       
+
+         // \DB::statement("ALTER TABLE appsetting ADD COLUMN using_winrawprint DOUBLE NULL DEFAULT '0' AFTER sn_key");
+        echo '.:: UPDATING SYSTEM ::.<br/>';
+        echo 'updating win raw printing......<br/>';
+        echo 'updating on progress......<br/>';
+        echo 'done.<br/>';
+
+        return false;
+    }
+
+    public function post_setWinPrintLoc(){
+        $appset = Appsetting::first();
+        $appset->winrawprint_loc = Input::get('winrawprintloc');
+        $appset->save();
+        
+        return Redirect::to('setting/sysconf');
+    }
+
+    public function post_setUseWinPrint(){
+        $appset = Appsetting::first();
+        $appset->using_winrawprint = Input::get('usingwinrawprint');
+        $appset->save();
+        
+        return Redirect::to('setting/sysconf');
+    }
     
     
     

@@ -1,9 +1,9 @@
-    @section('custom_script')
+    <?php \Laravel\Section::start('custom_script'); ?>
     <!--JZERA APPLET-->
-    <applet name="jzebra" code="jzebra.PrintApplet.class" archive="{{ URL::to('packages/jzebra.jar') }}" width="50px" height="50px">
+    <applet name="jzebra" code="jzebra.PrintApplet.class" archive="<?php echo  URL::to('packages/jzebra.jar') ; ?>" width="50px" height="50px">
       <!-- Optional, searches for printer with "zebra" in the name on load -->
       <!-- Note:  It is recommended to use applet.findPrinter() instead for ajax heavy applications -->
-      <param name="printer" value="{{ $appset->printeraddr }}">
+      <param name="printer" value="<?php echo  $appset->printeraddr ; ?>">
       <!-- ALL OF THE CACHE OPTIONS HAVE BEEN REMOVED DUE TO A BUG WITH JAVA 7 UPDATE 25 -->
 	  <!-- Optional, these "cache_" params enable faster loading "caching" of the applet -->
       <!-- <param name="cache_option" value="plugin"> -->
@@ -59,14 +59,14 @@
             /**
              * set tahunajaran aktif
              */
-            var tahunaktifid = "{{ $tahunaktif->id }}";
+            var tahunaktifid = "<?php echo  $tahunaktif->id ; ?>";
             jQuery('select[name=tahunajaran] option[value='+ tahunaktifid +']').css('color','white');
             jQuery('select[name=tahunajaran] option[value='+ tahunaktifid +']').css('background-color','green');
             /**
              * fungsi set data tahunajaran 
              */
             function setTahunajaran(){
-                var getTahunUrl = "{{ 'transaksi/bayariuran/tahunajaran' }}" + "/" + jQuery('select[name=tahunajaran]').attr('value');
+                var getTahunUrl = "<?php echo  'transaksi/bayariuran/tahunajaran' ; ?>" + "/" + jQuery('select[name=tahunajaran]').attr('value');
                 //get data siswa
                 jQuery.ajaxSetup ({cache: false});
                 jQuery.ajax({url:getTahunUrl,dataType:"json",async:false,
@@ -150,7 +150,7 @@
                     
                     //show data siswa
                     var nis = jQuery('input[name=nis]').attr('value');
-                    var getSiswaUrl = "{{ 'transaksi/bayariuran/siswabynisn' }}" + "/" + tahunajaran.id + "/" + nis;
+                    var getSiswaUrl = "<?php echo  'transaksi/bayariuran/siswabynisn' ; ?>" + "/" + tahunajaran.id + "/" + nis;
                     //get data siswa
                     jQuery.ajaxSetup ({cache: false});
                     jQuery.ajax({url:getSiswaUrl,dataType:"json",async:false,
@@ -199,7 +199,7 @@
              });
              function findSiswa(){
                 var nama = jQuery('input[name=namasiswa]').attr('value');
-                var getSiswaUrl = "{{ URL::to('transaksi/bayariuran/viewsiswabynama') }}" + "/" + tahunajaran.id + "/" + nama;
+                var getSiswaUrl = "<?php echo  URL::to('transaksi/bayariuran/viewsiswabynama') ; ?>" + "/" + tahunajaran.id + "/" + nama;
                 jQuery('.form-list-siswa').load(getSiswaUrl,function(){
                         /**
                          * tampilkan data siswa yang terpilih ke form
@@ -222,7 +222,7 @@
                 resetInputIB();
                 //predefined
                 var biayaid = jQuery(this).attr('value');
-                var getBiayaUrl = "{{ URL::to('transaksi/bayariuran/biaya') }}" + "/" + biayaid;
+                var getBiayaUrl = "<?php echo  URL::to('transaksi/bayariuran/biaya') ; ?>" + "/" + biayaid;
                 //get data biaya
                 jQuery.ajaxSetup ({cache: false});
                 jQuery.ajax({url:getBiayaUrl,dataType:"json",async:false,
@@ -243,7 +243,7 @@
                 if(biaya != null){
                     if(biaya.tipe == 'ITB' || biaya.tipe == 'ITC'){
                             //tampilkan ketentuan biaya
-                            var getKetBiayaUrl = "{{ URL::to('transaksi/bayariuran/ketetapanbiaya') }}" + "/" + tahunajaran.id + "/" + biaya.id + "/" + siswa.id;
+                            var getKetBiayaUrl = "<?php echo  URL::to('transaksi/bayariuran/ketetapanbiaya') ; ?>" + "/" + tahunajaran.id + "/" + biaya.id + "/" + siswa.id;
                             //get data biaya
                             jQuery.ajaxSetup ({cache: false});
                             jQuery.ajax({url:getKetBiayaUrl ,dataType:"json",async:false,
@@ -279,7 +279,7 @@
               var bulan;
               var bulanObj;
               function showInputITB(){
-                    var getBulanUrl = "{{ URL::to('transaksi/bayariuran/selectsisabulan') }}" + "/" + tahunajaran.id + "/" + siswa.id + "/" + biaya.id;
+                    var getBulanUrl = "<?php echo  URL::to('transaksi/bayariuran/selectsisabulan') ; ?>" + "/" + tahunajaran.id + "/" + siswa.id + "/" + biaya.id;
                     jQuery('.input-select-bulan').load(getBulanUrl,function(){
                         //filter bulan yang sudah di add saat transaksi sekarang
                         if(detiltrans.length > 0){
@@ -298,7 +298,7 @@
                         jQuery('select[name=bulan]').change(function(){
                             //get & set bulan
                             bulan = jQuery(this).attr('value');
-                            var getBulanObjUrl = "{{ URL::to('transaksi/bayariuran/bulan') }}" + "/" + bulan;
+                            var getBulanObjUrl = "<?php echo  URL::to('transaksi/bayariuran/bulan') ; ?>" + "/" + bulan;
                             jQuery.ajaxSetup ({cache: false});
                             jQuery.ajax({url:getBulanObjUrl ,dataType:"json",async:false,success:function(data){bulanObj = data;}});
                             showPotongan();
@@ -314,7 +314,7 @@
                var sudahdibayar;
                function showInputITC(){
                     //get data sudah dibayar
-                    var getSudahBayarUrl = "{{ URL::to('transaksi/bayariuran/sudahbayar') }}" + "/" + tahunajaran.id + "/" + biaya.id + "/" + siswa.id;
+                    var getSudahBayarUrl = "<?php echo  URL::to('transaksi/bayariuran/sudahbayar') ; ?>" + "/" + tahunajaran.id + "/" + biaya.id + "/" + siswa.id;
                     jQuery.get(getSudahBayarUrl).done(function(data){
                        sudahdibayar = data;
 
@@ -375,9 +375,9 @@
             function showPotongan(){
                 var getPotUrl;
                 if(biaya.tipe == 'ITB'){
-                    getPotUrl = "{{ URL::to('transaksi/bayariuran/potongan') }}" + "/" + tahunajaran.id + "/" + biaya.id + "/" + siswa.id + "/" + bulan ;
+                    getPotUrl = "<?php echo  URL::to('transaksi/bayariuran/potongan') ; ?>" + "/" + tahunajaran.id + "/" + biaya.id + "/" + siswa.id + "/" + bulan ;
                 }else if(biaya.tipe == 'ITC'){
-                    getPotUrl = "{{ URL::to('transaksi/bayariuran/potongan') }}" + "/" + tahunajaran.id + "/" + biaya.id + "/" + siswa.id + "/" ;
+                    getPotUrl = "<?php echo  URL::to('transaksi/bayariuran/potongan') ; ?>" + "/" + tahunajaran.id + "/" + biaya.id + "/" + siswa.id + "/" ;
                 }                
                 //get potonogan 
                 jQuery.ajaxSetup ({cache: false});
@@ -553,13 +553,13 @@
               jQuery('#btn-simpan').click(function(){
                   //confirmasi cetak nota
                   if(confirm('Cetak NOTA ??? JANGAN LUPA NYALAKAN PRINTER!!')){
-                      var turnOn = "{{ URL::to('transaksi/bayariuran/turnon') }}";
+                      var turnOn = "<?php echo  URL::to('transaksi/bayariuran/turnon') ; ?>";
                       jQuery.get(turnOn).done(function(){
                           simpanTransaksi(true);
                       });
                   }else{
                       //matikan fitur cetak
-                      var turnOff = "{{ URL::to('transaksi/bayariuran/turnoff') }}";
+                      var turnOff = "<?php echo  URL::to('transaksi/bayariuran/turnoff') ; ?>";
                       jQuery.get(turnOff).done(function(){
                           simpanTransaksi(false);
                       });
@@ -572,7 +572,7 @@
 
                     if(parseInt(detiltrans.length) > 0){
                               var trans = {"tanggal":jQuery('input[name=tanggal]').attr('value'),"tahunajaran_id":tahunajaran.id,"siswa_id":siswa.id,"total":total};
-                              jQuery.post("{{ URL::to('transaksi/bayariuran/new') }}", {
+                              jQuery.post("<?php echo  URL::to('transaksi/bayariuran/new') ; ?>", {
                                   detiltrans: JSON.stringify(detiltrans),
                                   trans: JSON.stringify(trans)
                               }).fail(function(data){
@@ -582,7 +582,7 @@
                               }).done(function(data){
                                     if(cetakNota){
                                         var textforprint;
-                                        var getTextUrl = "{{ URL::to('transaksi/bayariuran/cetaknota') }}" + "/" + data;
+                                        var getTextUrl = "<?php echo  URL::to('transaksi/bayariuran/cetaknota') ; ?>" + "/" + data;
                                         jQuery.ajax({url:getTextUrl,async:false,
                                             success:function(data){
                                                 // textforprint = data;
@@ -615,9 +615,9 @@
     </script>
     
     
-@endsection
+<?php \Laravel\Section::stop(); ?>
 
-@section('custom_style')
+<?php \Laravel\Section::start('custom_style'); ?>
     <style type="text/css">
         table tr td{
             padding: 5px;
@@ -640,12 +640,12 @@
         }
         
     </style>
-@endsection
+<?php \Laravel\Section::stop(); ?>
 
 <!--<div>
         <ul class="breadcrumb">
                 <li>
-                        <a href="{{ URL::to('home') }}">Home</a> <span class="divider">/</span>
+                        <a href="<?php echo  URL::to('home') ; ?>">Home</a> <span class="divider">/</span>
                 </li>
                 <li>
                         <a href="#">Penerimaan Iuran</a>
@@ -658,12 +658,12 @@
 <div id="loading-panel">
 </div>
 
-@if($appset->cetaknota == 'N')
+<?php if($appset->cetaknota == 'N'): ?>
 <!--<div class="alert alert-error alert-print">
         <strong>Cetak Nota Tidak Aktif!</strong> Untuk mengaktifkan klik tombol ini. 
-        <a class="btn btn-success btn-print-on" href="{{ URL::to('transaksi/bayariuran/turnon') }}" >TurnOn</a>
+        <a class="btn btn-success btn-print-on" href="<?php echo  URL::to('transaksi/bayariuran/turnon') ; ?>" >TurnOn</a>
 </div>-->
-@endif
+<?php endif; ?>
 
 <div class="row-fluid sortable ui-sortable">
         <div class="box span12">

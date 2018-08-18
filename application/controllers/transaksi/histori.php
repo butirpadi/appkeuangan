@@ -151,115 +151,137 @@ class Transaksi_Histori_Controller extends Base_Controller {
             return true;
     }
 
+    // public function post_cetaknotadirect(){
     public function post_cetaknotadirect(){
         $transid = Input::get('trans_id');
-            $vtrans = Vtransmasuk::where('id','=',$transid)->get();
-            $trans = Transmasuk::with(array('siswa','detiltransmasuks'))->where('id','=',$transid)->first();
-            
-            $tmpdir = sys_get_temp_dir();   # ambil direktori temporary untuk simpan file.
-            $file =  tempnam($tmpdir, 'ctk');  # nama file temporary yang akan dicetak
-            $handle = fopen($file, 'w');
-            $condensed = Chr(27) . Chr(33) . Chr(4);
-            $bold1 = Chr(27) . Chr(69);
-            $bold0 = Chr(27) . Chr(70);
-            $initialized = chr(27).chr(64);
-            $condensed1 = chr(15);
-            $condensed0 = chr(18);
-            $tanggaltrans = date('d-m-Y',strtotime($trans->tanggal));
-            $appset = Appsetting::first();
-            $tahunajaran = Tahunajaran::find($trans->tahunajaran_id);
-            $datacetakbaru="";
-            $l_no = 3;
-            $l_jenis = 10;
-            $l_pot = 10;
-            $l_bulan = 10;
-            $l_jumlah = 10;
-            $rowkertas = $appset->linekertas;
-            $rowsisa = $rowkertas - 18;
-            $spaceprinter = $appset->spaceprinter;
-            $jumlahitem = 0;
-            $user = Auth::retrieve(Session::get('onuser_id'));
-            $total = 0;
-            $Data = "";
-            $Data  = $initialized;
-            $Data .= $condensed1;
-            $Data .= $this->generate_space(($appset->charcount - strlen('Tanda Bukti Pembayaran Iuran'))/2,"") . "Tanda Bukti Pembayaran Iuran\n";
-            $Data .= $this->generate_space(($appset->charcount - strlen('SD Islam Sabilil Huda'))/2,"") . "SD Islam Sabilil Huda\n";
-            $Data .= $this->generate_space(($appset->charcount - strlen('Jl. Singokarso 54 Sumorame, Candi, Sidoarjo'))/2,"") . "Jl. Singokarso 54 Sumorame, Candi, Sidoarjo\n";
-            $Data .= $this->generate_space(($appset->charcount - strlen($tahunajaran->nama))/2,"") . $tahunajaran->nama . "\n\n";
-            $Data .= "Siswa : " . $trans->siswa->nama  . "\n";
-            $Data .= "NIS   : " . $trans->siswa->nisn . $this->generate_space($appset->charcount - strlen("NIS   : " . $trans->siswa->nisn), "Tanggal:" . $tanggaltrans) . "Tanggal:" . $tanggaltrans . "\n";
-            $Data .= "--------------------------------------------------------\n";
-            $Data .= "No Iuran     Pot       Bulan     " . $this->generate_space($appset->charcount -strlen("No Iuran     Pot       Bulan     "), "Jumlah") . "Jumlah\n";
-            $Data .= "--------------------------------------------------------\n";
-            $Data .= $datacetakbaru;
-            $rownum = 1;
-            foreach($trans->detiltransmasuks as $detrans){                
-                    $isi_num = $rownum++ .  $this->generate_space($l_no,$rownum);
-                    $isi_biaya = $detrans->jenisbiaya->nama . $this->generate_space($l_jenis,$detrans->jenisbiaya->nama);
-                    $isi_pot = (isset($detrans->potongan) ? number_format($detrans->potongan, 0, ',', '.') : '-') . $this->generate_space($l_pot,(isset($detrans->potongan) ? number_format($detrans->potongan, 0, ',', '.') : '-'));
-                    $isi_bulan = ucwords(($detrans->bulan ? $detrans->bulan->nama : '-')) . $this->generate_space($l_bulan,($detrans->bulan ? $detrans->bulan->nama : '-'));
-                    $isi_jumlah = $this->generate_space(($appset->charcount - strlen($isi_num . $isi_biaya . $isi_pot . $isi_bulan)),  number_format($detrans->jumlah, 0, ',', '.')) . number_format($detrans->jumlah, 0, ',', '.');
-                        
-                $Data .= $isi_num . $isi_biaya . $isi_pot . $isi_bulan . $isi_jumlah . "\n";
-                $jumlahitem++;
-                $total += $detrans->jumlah;
-            }
-            $Data .= "--------------------------------------------------------\n";
-            $Data .= "TOTAL BAYAR" . $this->generate_space($appset->charcount - strlen("TOTAL BAYAR"),"Rp. " . number_format($total, 0, ',','.')) . "Rp. " . number_format($total, 0, ',','.') . "\n";
-            $Data .= "--------------------------------------------------------\n";
-            $Data .= $this->generate_space($appset->charcount - strlen('TTD'),"") . "TTD\n";
-            $Data .= "\n";
-            $Data .= $this->generate_space($appset->charcount - strlen($user->name),"") . $user->name . "\n";
-            $Data .= "\n";
-            $Data .= $this->generate_space(($appset->charcount - strlen('Nota dianggap sah jika sudah dibubuhi stempel'))/2,"") . "Nota dianggap sah jika sudah dibubuhi stempel\n";
-            $Data .= $this->generate_space(($appset->charcount - strlen('dan tanda tangan dari Bagian Keuangan'))/2,"") . "dan tanda tangan dari bagian keuangan\n";
-            //sisa kertas
-            $entercount  =  $rowsisa - $jumlahitem + $spaceprinter;
-            for($i=0;$i<$entercount;$i++){
-                $Data.="\n ";
-            }
+        $vtrans = Vtransmasuk::where('id','=',$transid)->first();
+        $trans = Transmasuk::with(array('siswa','detiltransmasuks'))->where('id','=',$transid)->first();
+        
+        $tmpdir = sys_get_temp_dir();   # ambil direktori temporary untuk simpan file.
+        $file =  tempnam($tmpdir, 'ctk');  # nama file temporary yang akan dicetak
+        $handle = fopen($file, 'w');
+        $condensed = Chr(27) . Chr(33) . Chr(4);
+        $bold1 = Chr(27) . Chr(69);
+        $bold0 = Chr(27) . Chr(70);
+        $initialized = chr(27).chr(64);
+        $condensed1 = chr(15);
+        $condensed0 = chr(18);
+        $tanggaltrans = date('d-m-Y',strtotime($trans->tanggal));
+        $appset = Appsetting::first();
+        $tahunajaran = Tahunajaran::find($trans->tahunajaran_id);
+        $datacetakbaru="";
+        $l_no = 3;
+        $l_jenis = 10;
+        $l_pot = 10;
+        $l_bulan = 10;
+        $l_jumlah = 10;
+        $rowkertas = $appset->linekertas;
+        $rowsisa = $rowkertas - 18;
+        $spaceprinter = $appset->spaceprinter;
+        $jumlahitem = 0;
+        $user = Auth::retrieve(Session::get('onuser_id'));
+        $total = 0;
+        $Data = "";
+        $Data  = $initialized;
+        $Data .= $condensed1;
+        $Data .= $this->generate_space(($appset->charcount - strlen('Tanda Bukti Pembayaran Iuran'))/2,"") . "Tanda Bukti Pembayaran Iuran\n";
+        $Data .= $this->generate_space(($appset->charcount - strlen('SD Islam Sabilil Huda'))/2,"") . "SD Islam Sabilil Huda\n";
+        $Data .= $this->generate_space(($appset->charcount - strlen('Jl. Singokarso 54 Sumorame, Candi, Sidoarjo'))/2,"") . "Jl. Singokarso 54 Sumorame, Candi, Sidoarjo\n";
+        $Data .= $this->generate_space(($appset->charcount - strlen($tahunajaran->nama))/2,"") . $tahunajaran->nama . "\n\n";
+        // ----------------- original before edit --------------
+        // $Data .= "Siswa : " . $trans->siswa->nama  . "\n";
+        // $Data .= "NIS   : " . $trans->siswa->nisn . $this->generate_space($appset->charcount - strlen("NIS   : " . $trans->siswa->nisn), "Tanggal:" . $tanggaltrans) . "Tanggal:" . $tanggaltrans . "\n";
+        // ------------ edited on 11/1//2018--------------------
+        $rombel = \DB::table('rombelsiswa')
+                        ->where('tahunajaran_id','=',$vtrans->tahunajaran_id)
+                        ->where('siswa_id','=',$vtrans->siswa_id)
+                        ->join('rombel','rombelsiswa.rombel_id','=','rombel.id')
+                        ->first(array('rombel.id', 'rombel.nama'));
+        $Data .= "Siswa : " . $trans->siswa->nama  . $this->generate_space($appset->charcount - strlen("Siswa : " . $trans->siswa->nama), "Tanggal:" . $tanggaltrans) . "Tanggal:" . $tanggaltrans . "\n";
+        $Data .= "NIS   : " . $trans->siswa->nisn . "\n";
+        $Data .= "Kelas : " . $rombel->nama . "\n";
 
-            // echo $Data;
+        // ------------- end edited ----------------------------
+        $Data .= "--------------------------------------------------------\n";
+        $Data .= "No Iuran     Pot       Bulan     " . $this->generate_space($appset->charcount -strlen("No Iuran     Pot       Bulan     "), "Jumlah") . "Jumlah\n";
+        $Data .= "--------------------------------------------------------\n";
+        $Data .= $datacetakbaru;
+        $rownum = 1;
+        foreach($trans->detiltransmasuks as $detrans){                
+                $isi_num = $rownum++ .  $this->generate_space($l_no,$rownum);
+                $isi_biaya = $detrans->jenisbiaya->nama . $this->generate_space($l_jenis,$detrans->jenisbiaya->nama);
+                $isi_pot = (isset($detrans->potongan) ? number_format($detrans->potongan, 0, ',', '.') : '-') . $this->generate_space($l_pot,(isset($detrans->potongan) ? number_format($detrans->potongan, 0, ',', '.') : '-'));
+                $isi_bulan = ucwords(($detrans->bulan ? $detrans->bulan->nama : '-')) . $this->generate_space($l_bulan,($detrans->bulan ? $detrans->bulan->nama : '-'));
+                $isi_jumlah = $this->generate_space(($appset->charcount - strlen($isi_num . $isi_biaya . $isi_pot . $isi_bulan)),  number_format($detrans->jumlah, 0, ',', '.')) . number_format($detrans->jumlah, 0, ',', '.');
+                    
+            $Data .= $isi_num . $isi_biaya . $isi_pot . $isi_bulan . $isi_jumlah . "\n";
+            $jumlahitem++;
+            $total += $detrans->jumlah;
+        }
+        $Data .= "--------------------------------------------------------\n";
+        $Data .= "TOTAL BAYAR" . $this->generate_space($appset->charcount - strlen("TOTAL BAYAR"),"Rp. " . number_format($total, 0, ',','.')) . "Rp. " . number_format($total, 0, ',','.') . "\n";
+        $Data .= "--------------------------------------------------------\n";
+        $Data .= $this->generate_space($appset->charcount - strlen('TTD'),"") . "TTD\n";
+        $Data .= "\n";
+        $Data .= $this->generate_space($appset->charcount - strlen($user->name),"") . $user->name . "\n";
+        $Data .= "\n";
+        $Data .= $this->generate_space(($appset->charcount - strlen('Nota dianggap sah jika sudah dibubuhi stempel'))/2,"") . "Nota dianggap sah jika sudah dibubuhi stempel\n";
+        $Data .= $this->generate_space(($appset->charcount - strlen('dan tanda tangan dari Bagian Keuangan'))/2,"") . "dan tanda tangan dari bagian keuangan\n";
+        //sisa kertas
+        $entercount  =  $rowsisa - $jumlahitem + $spaceprinter;
+        for($i=0;$i<$entercount;$i++){
+            $Data.="\n ";
+        }
 
-            $tmpdir = sys_get_temp_dir();   # ambil direktori temporary untuk simpan file.
-            $file =  tempnam($tmpdir, 'ctk');  # nama file temporary yang akan dicetak
-            $handle = fopen($file, 'w');
-            // $condensed = Chr(27) . Chr(33) . Chr(4);
-            // $bold1 = Chr(27) . Chr(69);
-            // $bold0 = Chr(27) . Chr(70);
-            // $initialized = chr(27).chr(64);
-            // $condensed1 = chr(15);
-            // $condensed0 = chr(18);
-            // $Data  = $initialized;
-            // $Data .= $condensed1;
-            // $Data .= "================================================================================\n";
-            // $Data .= "  ".$bold1."UD Hasil Mancing".$bold0."      |\n";
-            // $Data .= "  ".$bold1."Ngaban Rt 5 RW 2 ".$bold0."      |\n";
-            // $Data .= "  ".$bold1."Tanggulangin, Sidoarjo 61272".$bold0."      |\n";
-            // $Data .= "================================================================================\n";
-            // $Data .= "Kepada : " . $data->customer . " \n";
-            // $Data .= "Pekerjaan : " . $data->pekerjaan . "\n";
-            // $Data .= "Alamat : " . $data->alamat_pekerjaan . ', ' . $data->desa . "\n";
-            // $Data .= "         " . $data->kecamatan . ', ' . $data->kabupaten . "\n";
-            
-            // $Data .= "--------------------------\n";
+        // echo $Data;
 
-            // echo $Data;
-            echo '+------    PRINTING ON PROGRESS.......   --------+<br/>';
-            fwrite($handle, $Data);
-            fclose($handle);
+        $tmpdir = sys_get_temp_dir();   # ambil direktori temporary untuk simpan file.
+        $file =  tempnam($tmpdir, 'ctk');  # nama file temporary yang akan dicetak
+        $handle = fopen($file, 'w');
+        // $condensed = Chr(27) . Chr(33) . Chr(4);
+        // $bold1 = Chr(27) . Chr(69);
+        // $bold0 = Chr(27) . Chr(70);
+        // $initialized = chr(27).chr(64);
+        // $condensed1 = chr(15);
+        // $condensed0 = chr(18);
+        // $Data  = $initialized;
+        // $Data .= $condensed1;
+        // $Data .= "================================================================================\n";
+        // $Data .= "  ".$bold1."UD Hasil Mancing".$bold0."      |\n";
+        // $Data .= "  ".$bold1."Ngaban Rt 5 RW 2 ".$bold0."      |\n";
+        // $Data .= "  ".$bold1."Tanggulangin, Sidoarjo 61272".$bold0."      |\n";
+        // $Data .= "================================================================================\n";
+        // $Data .= "Kepada : " . $data->customer . " \n";
+        // $Data .= "Pekerjaan : " . $data->pekerjaan . "\n";
+        // $Data .= "Alamat : " . $data->alamat_pekerjaan . ', ' . $data->desa . "\n";
+        // $Data .= "         " . $data->kecamatan . ', ' . $data->kabupaten . "\n";
+        
+        // $Data .= "--------------------------\n";
 
-            if (preg_match('/linux/',strtolower(PHP_OS))){
-                echo 'printing on linux';
+        // echo $Data;
+        echo '+------    PRINTING ON PROGRESS.......   --------+<br/>';
+        fwrite($handle, $Data);
+        fclose($handle);
+
+        if (preg_match('/linux/',strtolower(PHP_OS))){
+            echo 'printing on linux';
+        }else{
+            // print on windows
+            //copy($file, "//localhost/LX-300");  # Lakukan cetak
+            echo 'printing on windows ... <br/>'; 
+
+            if($appset->using_winrawprint == 'Y'){
+                // using raw printer app
+                exec($appset->winrawprint_loc . ' -p "' . $appset->printeraddr . '" '. $file);
+                
             }else{
-                // print on windows
-                //copy($file, "//localhost/LX-300");  # Lakukan cetak
-                copy($file, $appset->printeraddr);  # Lakukan cetak                
+                // using copy
+                copy($file, $appset->printeraddr);  # Lakukan cetak                                    
             }
+        }
 
-            unlink($file);
-            return false;
+        unlink($file);
+        return false;
     }
     
     public function post_cetaknotajzebra(){
@@ -348,26 +370,16 @@ class Transaksi_Histori_Controller extends Base_Controller {
     }
 
     public function get_testcetak(){
-        $tmpdir = sys_get_temp_dir();   # ambil direktori temporary untuk simpan file.
-        $file =  tempnam($tmpdir, 'ctk');  # nama file temporary yang akan dicetak
-        $handle = fopen($file, 'w');
-        fwrite($handle, chr(27).chr(64).'test printing');
-        fclose($handle);
-        $appset = Appsetting::first();
-        // copy($file, $appset->printeraddr); 
-
-        // // exec('lpr -PLX-300 %s' % $file);
-        exec("lpr -P " . $appset->printeraddr . " -r " . $file );
-        // exec('lpr -S ' . $printer->printer_ip . ' -P ' . $printer->printer_name . ' -o -x ' . $file);
-
-        // $command = 'lpr -S 192.168.1.6 -P LX-300+ -o -x /tmp/ctk1uNwkz' ;
-        //     //$command = 'lp -d ' . $printer->printer_name . ' ' . $file;
-        //     if (exec($command)) {
-
-        //         print 'Berhasil';
-        //     } else{
-        //         echo 'Print Gagal';
-        //     }
+        $rombelsiswa = \DB::select('select rombelsiswa.id, rombelsiswa.rombel_id, rombel.nama as rombel from rombelsiswa 
+                                    inner join rombel on rombelsiswa.rombel_id = rombel.id
+                                    where tahunajaran_id = 5
+                                    and siswa_id = 381' );
+        $rombel = \DB::table('rombelsiswa')
+                        ->where('tahunajaran_id','=',5)
+                        ->where('siswa_id','=',381)
+                        ->join('rombel','rombelsiswa.rombel_id','=','rombel.id')
+                        ->first(array('rombel.id', 'rombel.nama'));
+        echo var_dump($rombel);
 
         return false;
     }
