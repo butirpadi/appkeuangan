@@ -306,7 +306,7 @@ class Rekap_Iuranpertapel_Controller extends Base_Controller {
             $pdf->Cell($colrombel,10,'Rombel',1,0,'C');
         }
         if($rombel){
-            $pdf->Cell((12 * $colbl),5,'Bulan',1,0,'C');
+            $pdf->Cell((12 * $colbl),5,'Pembayaran/Bulan',1,0,'C');
         }
         if($rombel){
             $pdf->Cell($coltotal,10,'Bayar',1,0,'C');

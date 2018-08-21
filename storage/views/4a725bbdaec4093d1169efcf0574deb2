@@ -70,6 +70,9 @@
                  */
                 jQuery('#buttonTampil').click(function(){
                     // cek inputan sudah benar atau belum
+                    // $('form[name=form-iuran]').submit();
+                    
+                    // Submit with jquery post
                     var page_res = $.post(
                             $('form[name=form-iuran]').attr('action'), 
                             $('form[name=form-iuran]').serialize(), 

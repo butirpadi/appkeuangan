@@ -13,8 +13,8 @@
                 @if(!$rombel)
                 <th rowspan="2" style="vertical-align: middle;text-align: center;" >ROMBEL</th>
                 @endif
-                <th colspan="12" style="vertical-align: middle;text-align: center;" >BULAN</th>
-                <th rowspan="2" style="vertical-align: middle;text-align: center;" >BAYAR</th>
+                <th colspan="12" style="vertical-align: middle;text-align: center;" >PEMBAYARAN/BULAN</th>
+                <th rowspan="2" style="vertical-align: middle;text-align: center;" >TOTAL<br/>BAYAR</th>
                 <th rowspan="2" style="vertical-align: middle;text-align: center;" >KEWAJIBAN</th>
                 <th rowspan="2" style="vertical-align: middle;text-align: center;" >POTONGAN</th>
                 <th rowspan="2" style="vertical-align: middle;text-align: center;" >KEKURANGAN</th>
