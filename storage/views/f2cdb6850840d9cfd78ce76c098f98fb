@@ -1,9 +1,9 @@
     <?php \Laravel\Section::start('custom_script'); ?>
     <!--JZERA APPLET-->
-    <applet name="jzebra" code="jzebra.PrintApplet.class" archive="<?php echo  URL::to('packages/jzebra.jar') ; ?>" width="50px" height="50px">
+    <!-- <applet name="jzebra" code="jzebra.PrintApplet.class" archive="<?php echo  URL::to('packages/jzebra.jar') ; ?>" width="50px" height="50px"> -->
       <!-- Optional, searches for printer with "zebra" in the name on load -->
       <!-- Note:  It is recommended to use applet.findPrinter() instead for ajax heavy applications -->
-      <param name="printer" value="<?php echo  $appset->printeraddr ; ?>">
+      <!-- <param name="printer" value="<?php echo  $appset->printeraddr ; ?>"> -->
       <!-- ALL OF THE CACHE OPTIONS HAVE BEEN REMOVED DUE TO A BUG WITH JAVA 7 UPDATE 25 -->
 	  <!-- Optional, these "cache_" params enable faster loading "caching" of the applet -->
       <!-- <param name="cache_option" value="plugin"> -->
@@ -11,9 +11,9 @@
       <!-- <param name="cache_archive" value="./jzebra.jar"> -->
       <!-- Change "cache_version" to reflect current jZebra version -->
       <!-- <param name="cache_version" value="1.4.9.1"> -->
-   </applet>
+   <!-- </applet> -->
     <!--JZEBRA PRINTING-->    
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
             function jzebraDonePrinting() {
                 if (applet.getException() != null) {
                    return alert('Error:' + applet.getExceptionMessage());
@@ -30,7 +30,7 @@
                 //jzebraDonePrinting();
                 
             }
-    </script>
+    </script> -->
     
     <script type="text/javascript">
         jQuery(document).ready(function(){
@@ -119,6 +119,8 @@
                 jQuery('input[name=bayar]').removeAttr('value');
                 jQuery('.input-bayar').hide();
                 jQuery('.input-potongan').hide();
+                jQuery('.input-sudah-bayar').hide();
+                jQuery('.input-harus-bayar').hide();
                 potongan = null;
                 jQuery('.btn-input').hide();
             }
@@ -320,15 +322,16 @@
 
                        //tampilkan sudah dibayar
                       if(sudahdibayar > 0){
-                          jQuery('.input-sudah-bayar').show();
-                          jQuery('input[name=sudahbayar]').attr('value',formatRupiahVal(sudahdibayar));
-                          jQuery('.input-harus-bayar').show();
-                          jQuery('input[name=harus]').attr('value',formatRupiahVal(ketbiaya.jumlah - sudahdibayar));
+                            jQuery('.input-sudah-bayar').show();
+                            jQuery('input[name=sudahbayar]').attr('value',formatRupiahVal(sudahdibayar));
+                            jQuery('.input-harus-bayar').show();
+                            jQuery('input[name=harusbayar]').attr('value',formatRupiahVal(ketbiaya.jumlah - sudahdibayar));
+                            jQuery('.input-sudah-bayar').show();
                       }else{
-                          jQuery('.input-sudah-bayar').hide();
-                          jQuery('input[name=sudahbayar]').removeAttr('value');
-                          jQuery('.input-harus-bayar').hide();
-                          jQuery('input[name=harus]').removeAttr('value');
+                            jQuery('.input-sudah-bayar').hide();
+                            jQuery('input[name=sudahbayar]').removeAttr('value');
+                            jQuery('.input-harus-bayar').hide();
+                            jQuery('input[name=harusbayar]').removeAttr('value');
                       }
                       //show potongan kalau ada
                       showPotongan();
@@ -397,22 +400,29 @@
              */
              function showBayar(){
                 if(potongan != null){
-                    //tampilkan input bayar
+                    //tampilkan input bayar                    
                     jQuery('input[name=bayar]').attr('value',formatRupiahVal((ketbiaya.jumlah - potongan.nilai)));
-                    jQuery('input[name=bayar]').attr('readonly','readonly');
+                    // jQuery('input[name=bayar]').attr('readonly','readonly');
+                    if(biaya.tipe == 'ITC'){
+                        // jQuery('input[name=bayar]').attr('value',formatRupiahVal((ketbiaya.jumlah - potongan.nilai)));
+                        jQuery('input[name=bayar]').attr('value','');
+
+                    }
                 }else{
                     //reset dan sembunyikan
                     jQuery('input[name=potongan]').removeAttr('value');
                     jQuery('.input-potongan').hide();
                     //tampilkan input bayar
                     if(biaya.tipe == 'ITB'){
-                        jQuery('input[name=bayar]').attr('readonly','readonly');
+                        // jQuery('input[name=bayar]').attr('readonly','readonly');
                         jQuery('input[name=bayar]').attr('value',formatRupiahVal(ketbiaya.jumlah));
                     }else if(biaya.tipe == 'ITC'){
-                        jQuery('input[name=bayar]').removeAttr('readonly');
+                        // alert('show bayar ITC');
+                        // jQuery('input[name=bayar]').removeAttr('readonly');
                         jQuery('input[name=bayar]').removeAttr('value');
+                        
                     }else{
-                        jQuery('input[name=bayar]').removeAttr('readonly');
+                        // jQuery('input[name=bayar]').removeAttr('readonly');
                         jQuery('input[name=bayar]').removeAttr('value');
                     }
                 }
@@ -430,47 +440,50 @@
              var rownum=1;
              var total=0;
              jQuery('.btn-input').click(function(){
-                 //add detiltrans ke dalam array
-                 var newrow;
-                 if(biaya.tipe == 'ITB'){
-                     if (potongan.nilai > 0){
-                         //alert(JSON.stringify(potongan));
-                         var ketPotongan;
-                         if(potongan.jenis == 'BS'){
-                             ketPotongan='Beasiswa Prestasi (' + potongan.ket + ')';
-                         }else{
-                             ketPotongan='Bantuan Pendidikan(' + potongan.ket + ')';
-                         }
-                         //jika ada potongan
-                         detiltrans[detiltrans.length] = {"rownum":rownum,"jenisbiaya_id":biaya.id,"bulan_id":bulan,"harus_bayar":ketbiaya.jumlah,"jumlah":(ketbiaya.jumlah - potongan.nilai),"potongan":potongan.nilai,"ket":potongan.ket};
-                         newrow = '<tr id="row_' + (rownum) + '"><td class="angka">'+ rownum +'</td><td>' + ucwords(biaya.nama) + '</td><td>' +  ucwords(bulanObj.nama) + '</td><td class="uang">' + formatRupiahVal(ketbiaya.jumlah) + '</td><td class="uang">' + formatRupiahVal(potongan.nilai) + '</td><td>' + ketPotongan + '</td><td class="uang">' + formatRupiahVal(ketbiaya.jumlah - potongan.nilai) + '</td><td><a rownum="' + rownum + '" class="btn btn-mini btn-warning btn-delete-detil">Delete</a></td></tr>';
-                         //set total
-                         total += parseInt(ketbiaya.jumlah - potongan.nilai);
-                     }else if(potongan.nilai == 0 || potongan == null ){
-                        detiltrans[detiltrans.length] = {"rownum":rownum,"jenisbiaya_id":biaya.id,"bulan_id":bulan,"harus_bayar":ketbiaya.jumlah,"jumlah":ketbiaya.jumlah};
-                        newrow = '<tr id="row_' + (rownum) + '"><td class="angka">'+ rownum +'</td><td>' + ucwords(biaya.nama) + '</td><td>' +  ucwords(bulanObj.nama) + '</td><td class="uang">' + formatRupiahVal(ketbiaya.jumlah) + '</td><td class="uang">0</td><td>-</td><td class="uang">' + formatRupiahVal(ketbiaya.jumlah) + '</td><td><a rownum="' + rownum + '" class="btn btn-mini btn-warning btn-delete-detil">Delete</a></a></td></tr>';
-                        //set total
-                        total += parseInt(ketbiaya.jumlah);
-                     }
-                     
-                     //reset tabel inputan
-                    resetInputITB();
-                    resetBiaya();
-                    //tampilkan ke dalam tabel form
-                    jQuery('#tabel-transaksi').append(newrow);
-                    //tampilkan total
-                    jQuery('.form-total').text(formatRupiahVal(total));
-                    //rownum plus plus
-                    rownum++;
-                 }else if(biaya.tipe == 'ITC'){
-                     var jumlah = unformatRupiahVal(jQuery('input[name=bayar]').attr('value'));
-                     
-                     if(jumlah > parseInt(ketbiaya.jumlah - sudahdibayar - parseInt(potongan.nilai))){
-                         alert('.:: PERINGANTAN ::. Jumlah bayar melebihi ketentuan.');
-                     }else{
-                            if (potongan != null){
+                //  cek apakah bayar telah terisi atau belum
+                var akan_di_bayar = unformatRupiahVal($('input[name=bayar]').val());
+                if (akan_di_bayar > 0) {
+                    //add detiltrans ke dalam array
+                    var newrow;
+                    if(biaya.tipe == 'ITB'){
+                        if (potongan.nilai > 0){
+                            //alert(JSON.stringify(potongan));
                             var ketPotongan;
                             if(potongan.jenis == 'BS'){
+                                ketPotongan='Beasiswa Prestasi (' + potongan.ket + ')';
+                            }else{
+                                ketPotongan='Bantuan Pendidikan(' + potongan.ket + ')';
+                            }
+                            //jika ada potongan
+                            detiltrans[detiltrans.length] = {"rownum":rownum,"jenisbiaya_id":biaya.id,"bulan_id":bulan,"harus_bayar":ketbiaya.jumlah,"jumlah":(ketbiaya.jumlah - potongan.nilai),"potongan":potongan.nilai,"ket":potongan.ket};
+                            newrow = '<tr id="row_' + (rownum) + '"><td class="angka">'+ rownum +'</td><td>' + ucwords(biaya.nama) + '</td><td>' +  ucwords(bulanObj.nama) + '</td><td class="uang">' + formatRupiahVal(ketbiaya.jumlah) + '</td><td class="uang">' + formatRupiahVal(potongan.nilai) + '</td><td>' + ketPotongan + '</td><td class="uang">' + formatRupiahVal(ketbiaya.jumlah - potongan.nilai) + '</td><td><a rownum="' + rownum + '" class="btn btn-mini btn-warning btn-delete-detil">Delete</a></td></tr>';
+                            //set total
+                            total += parseInt(ketbiaya.jumlah - potongan.nilai);
+                        }else if(potongan.nilai == 0 || potongan == null ){
+                            detiltrans[detiltrans.length] = {"rownum":rownum,"jenisbiaya_id":biaya.id,"bulan_id":bulan,"harus_bayar":ketbiaya.jumlah,"jumlah":ketbiaya.jumlah};
+                            newrow = '<tr id="row_' + (rownum) + '"><td class="angka">'+ rownum +'</td><td>' + ucwords(biaya.nama) + '</td><td>' +  ucwords(bulanObj.nama) + '</td><td class="uang">' + formatRupiahVal(ketbiaya.jumlah) + '</td><td class="uang">0</td><td>-</td><td class="uang">' + formatRupiahVal(ketbiaya.jumlah) + '</td><td><a rownum="' + rownum + '" class="btn btn-mini btn-warning btn-delete-detil">Delete</a></a></td></tr>';
+                            //set total
+                            total += parseInt(ketbiaya.jumlah);
+                        }
+                        
+                        //reset tabel inputan
+                        resetInputITB();
+                        resetBiaya();
+                        //tampilkan ke dalam tabel form
+                        jQuery('#tabel-transaksi').append(newrow);
+                        //tampilkan total
+                        jQuery('.form-total').text(formatRupiahVal(total));
+                        //rownum plus plus
+                        rownum++;
+                    }else if(biaya.tipe == 'ITC'){
+                        var jumlah = unformatRupiahVal(jQuery('input[name=bayar]').attr('value'));
+                        
+                        if(jumlah > parseInt(ketbiaya.jumlah - sudahdibayar - parseInt(potongan.nilai))){
+                            alert('.:: PERINGANTAN ::. Jumlah bayar melebihi ketentuan.');
+                        }else{
+                            if (potongan != null){
+                                var ketPotongan;
+                                if(potongan.jenis == 'BS'){
                                     ketPotongan='Beasiswa Prestasi (' + potongan.ket + ')';
                                 }else{
                                     ketPotongan='Bantuan Pendidikan(' + potongan.ket + ')';
@@ -487,37 +500,41 @@
                                 total += parseInt(jumlah);
                             }
                             //reset tabel inputan
-                           resetInputITC();
-                           resetBiaya();     
-                           //tampilkan ke dalam tabel form
+                            resetInputITC();
+                            resetBiaya();     
+                            //tampilkan ke dalam tabel form
+                                jQuery('#tabel-transaksi').append(newrow);
+                                //tampilkan total
+                                jQuery('.form-total').text(formatRupiahVal(total));
+                                //rownum plus plus
+                                rownum++;
+                        }
+                    }else if(biaya.tipe == 'IB'){
+                            var jumlah = parseInt(unformatRupiahVal(jQuery('input[name=bayar]').attr('value')));
+                            var ket = jQuery('input[name=keterangan]').attr('value');
+                            detiltrans[detiltrans.length] = {"rownum":rownum,"jenisbiaya_id":biaya.id,"jumlah":jumlah,"ket":ket};
+                            newrow = '<tr id="row_' + (rownum) + '"><td class="angka">'+ rownum +'</td><td>' + ucwords(biaya.nama) + '</td><td style="text-align:center;">-</td><td class="uang">' + formatRupiahVal(jumlah) + '</td><td style="text-align:center;">-</td><td>' + ket + '</td><td class="uang">' + formatRupiahVal(jumlah) + '</td><td><a rownum="' + rownum + '" class="btn btn-warning btn-delete-detil btn-mini">Delete</a></td></tr>';
+                            //set total
+                            total += parseInt(jumlah);
+                            //reset
+                            resetInputIB();
+                            resetBiaya();
+                            //tampilkan ke dalam tabel form
                             jQuery('#tabel-transaksi').append(newrow);
                             //tampilkan total
                             jQuery('.form-total').text(formatRupiahVal(total));
                             //rownum plus plus
                             rownum++;
-                     }
-                 }else if(biaya.tipe == 'IB'){
-                        var jumlah = parseInt(unformatRupiahVal(jQuery('input[name=bayar]').attr('value')));
-                        var ket = jQuery('input[name=keterangan]').attr('value');
-                        detiltrans[detiltrans.length] = {"rownum":rownum,"jenisbiaya_id":biaya.id,"jumlah":jumlah,"ket":ket};
-                        newrow = '<tr id="row_' + (rownum) + '"><td class="angka">'+ rownum +'</td><td>' + ucwords(biaya.nama) + '</td><td style="text-align:center;">-</td><td class="uang">' + formatRupiahVal(jumlah) + '</td><td style="text-align:center;">-</td><td>' + ket + '</td><td class="uang">' + formatRupiahVal(jumlah) + '</td><td><a rownum="' + rownum + '" class="btn btn-warning btn-delete-detil btn-mini">Delete</a></td></tr>';
-                        //set total
-                        total += parseInt(jumlah);
-                        //reset
-                        resetInputIB();
-                        resetBiaya();
-                        //tampilkan ke dalam tabel form
-                        jQuery('#tabel-transaksi').append(newrow);
-                        //tampilkan total
-                        jQuery('.form-total').text(formatRupiahVal(total));
-                        //rownum plus plus
-                        rownum++;
-                        
-                 }
+                            
+                    }
 
-                 resetInputITC();
-                 resetInputITB();
-                 resetInputIB();
+                    resetInputITC();
+                    resetInputITB();
+                    resetInputIB();
+                }else{
+                    alert('ERROR. Jumlah Bayar tidak sesuai.');
+                }
+                 
              });
              /**
               * Hapus data detil transaksi
